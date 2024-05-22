@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.IO;
 
 public class MainManager : MonoBehaviour
 {
+    public static MainManager Instance;
     public Brick BrickPrefab;
     public int LineCount = 6;
     public Rigidbody Ball;
@@ -62,6 +64,22 @@ public class MainManager : MonoBehaviour
         }
     }
 
+    // private void Awake()
+    // {
+    //     // This pattern is called a singleton.
+    //     // You use it to ensure that only a single instance of the MainManager can ever exist, so it acts as a central point of access.
+    //     if (Instance != null)
+    //     {
+    //         Destroy(gameObject);
+    //         return;
+    //     }
+
+    //     Instance = this;
+    //     DontDestroyOnLoad(gameObject);
+        
+    //     LoadRecord();
+    // }
+
     void AddPoint(int point)
     {
         m_Points += point;
@@ -72,5 +90,46 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+
+        // if (m_Points > recordScore){
+        //     SaveData();
+        // }
     }
+    /*
+    [System.Serializable]
+    class SaveData
+    {
+        public string recordPlayer;
+        public int recordScore;
+    }
+
+    public void SaveRecord()
+    {
+        SaveData data = new SaveData();
+        data.recordPlayer = playerName;
+        data.recordScore = m_Points;
+
+        string json = JsonUtility.ToJson(data);
+
+        Debug.Log(Application.persistentDataPath);
+        File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
+    }
+
+    public void LoadRecord()
+    {
+        string path = Application.persistentDataPath + "/savefile.json";
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            SaveData data = JsonUtility.FromJson<SaveData>(json);
+
+            recordPlayer = data.recordPlayer;
+            recordScore = data.recordScore;
+        }
+        else {
+            recordPlayer = "Player";
+            recordScore = 0;
+        }
+    }
+    */
 }
