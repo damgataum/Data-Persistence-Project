@@ -16,17 +16,26 @@ public class MenuUIHandler : MonoBehaviour
 {
     public TextMeshProUGUI recordText;
 
-    public InputField NameInputField;
+    public TMP_InputField NameInputField;
     
     private void Start()
     {
-        //recordText.text = MainManager.Instance.recordPlayer + " - " + MainManager.Instance.recordScore;
+        recordText.text = ScoreManager.Instance.recordPlayer + " - " + ScoreManager.Instance.recordScore;
     }
 
     public void StartNew()
     {
-        //Debug.Log(NameInputField.Text);
-        //MainManager.Instance.playerName = NameInputField.Text;
+        NameInputField.interactable = true;
+
+        if (NameInputField.text != null)
+        {
+            ScoreManager.Instance.playerName = NameInputField.text;
+        }
+        else 
+        {
+            ScoreManager.Instance.playerName = "???";
+        }
+        
         SceneManager.LoadScene(1);
     }
 

@@ -3,30 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using System.IO;
 
 public class MainManager : MonoBehaviour
 {
-    public static MainManager Instance;
     public Brick BrickPrefab;
     public int LineCount = 6;
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public Text BestScoreText;
     public GameObject GameOverText;
-    
+
     private bool m_Started = false;
     private int m_Points;
-    
+
     private bool m_GameOver = false;
 
-    
+
     // Start is called before the first frame update
     void Start()
     {
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
-        
+
         int[] pointCountArray = new [] {1,1,2,2,5,5};
         for (int i = 0; i < LineCount; ++i)
         {
@@ -44,6 +43,8 @@ public class MainManager : MonoBehaviour
     {
         if (!m_Started)
         {
+            BestScoreText.text = $"Best Score : {ScoreManager.Instance.recordPlayer} : {ScoreManager.Instance.recordScore}";
+
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 m_Started = true;
@@ -59,26 +60,11 @@ public class MainManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                SceneManager.LoadScene(0);
+                // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
         }
     }
-
-    // private void Awake()
-    // {
-    //     // This pattern is called a singleton.
-    //     // You use it to ensure that only a single instance of the MainManager can ever exist, so it acts as a central point of access.
-    //     if (Instance != null)
-    //     {
-    //         Destroy(gameObject);
-    //         return;
-    //     }
-
-    //     Instance = this;
-    //     DontDestroyOnLoad(gameObject);
-        
-    //     LoadRecord();
-    // }
 
     void AddPoint(int point)
     {
@@ -88,48 +74,15 @@ public class MainManager : MonoBehaviour
 
     public void GameOver()
     {
+        int recordScore;
+        recordScore = ScoreManager.Instance.recordScore;
+
         m_GameOver = true;
         GameOverText.SetActive(true);
 
-        // if (m_Points > recordScore){
-        //     SaveData();
-        // }
-    }
-    /*
-    [System.Serializable]
-    class SaveData
-    {
-        public string recordPlayer;
-        public int recordScore;
-    }
-
-    public void SaveRecord()
-    {
-        SaveData data = new SaveData();
-        data.recordPlayer = playerName;
-        data.recordScore = m_Points;
-
-        string json = JsonUtility.ToJson(data);
-
-        Debug.Log(Application.persistentDataPath);
-        File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
-    }
-
-    public void LoadRecord()
-    {
-        string path = Application.persistentDataPath + "/savefile.json";
-        if (File.Exists(path))
-        {
-            string json = File.ReadAllText(path);
-            SaveData data = JsonUtility.FromJson<SaveData>(json);
-
-            recordPlayer = data.recordPlayer;
-            recordScore = data.recordScore;
-        }
-        else {
-            recordPlayer = "Player";
-            recordScore = 0;
+        if (m_Points > recordScore){
+            ScoreManager.Instance.recordScore = m_Points;
+            ScoreManager.Instance.SaveRecord();
         }
     }
-    */
 }
